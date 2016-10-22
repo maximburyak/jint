@@ -18,6 +18,8 @@ using Jint.Native.RegExp;
 using Jint.Native.String;
 using Jint.Native.Symbol;
 using Jint.Pooling;
+using Esprima;
+using Esprima.Ast;
 using Jint.Runtime;
 using Jint.Runtime.CallStack;
 using Jint.Runtime.Debugger;
@@ -325,7 +327,7 @@ namespace Jint
             ResetLastStatement();
             ResetCallStack();
 
-            using (new StrictModeScope(Options._IsStrict || program.Strict))
+            using (new StrictModeScope(Options._IsStrict || program.IsStrict()))
             {
                 DeclarationBindingInstantiation(DeclarationBindingType.GlobalCode, program.HoistingScope.FunctionDeclarations, program.HoistingScope.VariableDeclarations, null, null);
 

@@ -3,6 +3,7 @@ using System.Linq;
 using Esprima;
 using Esprima.Ast;
 using Jint.Native.Object;
+using Jint.Native.String;
 using Jint.Runtime;
 using Jint.Runtime.Descriptors.Specialized;
 using Jint.Runtime.Environments;
@@ -72,7 +73,7 @@ namespace Jint.Native.Function
             IFunction function;
             try
             {
-                var functionExpression = "function f(" + p + ") { " + body + "}";
+                var functionExpression = string.Concat("function f(" , p , ") { " , body , "}");
                 var parser = new JavaScriptParser(functionExpression, ParserOptions);
                 function = parser.ParseProgram().Body.First().As<IFunction>();
             }
@@ -85,7 +86,7 @@ namespace Jint.Native.Function
                 Engine,
                 function,
                 LexicalEnvironment.NewDeclarativeEnvironment(Engine, Engine.ExecutionContext.LexicalEnvironment),
-                function.Strict
+                function.IsStrict()
                 ) { Extensible = true };
 
             return functionObject;
@@ -103,7 +104,7 @@ namespace Jint.Native.Function
                 Engine,
                 functionDeclaration,
                 LexicalEnvironment.NewDeclarativeEnvironment(Engine, Engine.ExecutionContext.LexicalEnvironment),
-                functionDeclaration.Strict
+                functionDeclaration.IsStrict()
                 ) { Extensible = true };
 
             return functionObject;

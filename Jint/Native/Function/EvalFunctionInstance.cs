@@ -1,5 +1,7 @@
 ﻿using Esprima;
 using Jint.Native.Argument;
+using System.Linq;
+using Esprima.Ast;
 using Jint.Runtime;
 using Jint.Runtime.Descriptors.Specialized;
 using Jint.Runtime.Environments;
