@@ -316,6 +316,14 @@ namespace Jint
 
         public Engine Execute(string source, ParserOptions parserOptions)
         {
+            if (Options._IsDebugMode)
+            {
+                parserOptions.Loc = true;
+            }
+
+            parserOptions.AdaptRegexp = true;
+            parserOptions.Tolerant = false;
+
             var parser = new JavaScriptParser(source, parserOptions);
             return Execute(parser.ParseProgram());
         }
