@@ -86,7 +86,7 @@ namespace Jint.Native.Function
                 Engine,
                 function,
                 LexicalEnvironment.NewDeclarativeEnvironment(Engine, Engine.ExecutionContext.LexicalEnvironment),
-                function.IsStrict()
+                function.Strict
                 ) { Extensible = true };
 
             return functionObject;
@@ -104,7 +104,7 @@ namespace Jint.Native.Function
                 Engine,
                 functionDeclaration,
                 LexicalEnvironment.NewDeclarativeEnvironment(Engine, Engine.ExecutionContext.LexicalEnvironment),
-                functionDeclaration.IsStrict()
+                functionDeclaration.Strict
                 ) { Extensible = true };
 
             return functionObject;
