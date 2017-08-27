@@ -1,6 +1,8 @@
 ﻿using Esprima;
 using Jint.Runtime;
 using System;
+using Esprima;
+using Jint.Runtime;
 using Xunit;
 
 namespace Jint.Tests.Runtime

@@ -111,7 +111,7 @@ this.has_emptyfield_not_null = this.EmptyField !== null;
 
             var wrapperScript = string.Format(@"function ExecutePatchScript(docInner){{ (function(doc){{ {0} }}).apply(docInner); }};", script);
 
-            engine.Execute(wrapperScript, new ParserOptions("main.js"));
+            engine.Execute(wrapperScript);
 
             engine.Invoke("ExecutePatchScript", jsObject);
 
