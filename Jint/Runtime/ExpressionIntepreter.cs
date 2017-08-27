@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Esprima;
 using Esprima.Ast;
+using Esprima;
+using Esprima.Ast;
 using Jint.Native;
 using Jint.Native.Function;
 using Jint.Native.Number;
@@ -56,7 +58,7 @@ namespace Jint.Runtime
             if (assignmentExpression.Operator == AssignmentOperator.Assign) // "="
             {
 
-                if(lref.IsStrict() && lref.GetBase().TryCast<EnvironmentRecord>() != null && (lref.GetReferencedName() == "eval" || lref.GetReferencedName() == "arguments"))
+                if (lref.IsStrict() && lref.GetBase().TryCast<EnvironmentRecord>() != null && (lref.GetReferencedName() == "eval" || lref.GetReferencedName() == "arguments"))
                 {
                     throw new JavaScriptException(_engine.SyntaxError);
                 }
@@ -199,7 +201,7 @@ namespace Jint.Runtime
                     return lN > 0 ? double.PositiveInfinity : double.NegativeInfinity;
                 }
 
-                return lN/rN;
+                return lN / rN;
             }
         }
 
@@ -406,7 +408,40 @@ namespace Jint.Runtime
 
             if (typex == typey)
             {
-				return StrictlyEqual(x, y);
+                if (typex == Types.Undefined || typex == Types.Null)
+                {
+                    return true;
+                }
+
+                if (typex == Types.Number)
+                {
+                    var nx = TypeConverter.ToNumber(x);
+                    var ny = TypeConverter.ToNumber(y);
+
+                    if (double.IsNaN(nx) || double.IsNaN(ny))
+                    {
+                        return false;
+                    }
+
+                    if (nx.Equals(ny))
+                    {
+                        return true;
+                    }
+
+                    return false;
+                }
+
+                if (typex == Types.String)
+                {
+                    return TypeConverter.ToString(x) == TypeConverter.ToString(y);
+                }
+
+                if (typex == Types.Boolean)
+                {
+                    return x.AsBoolean() == y.AsBoolean();
+                }
+
+                return x == y;
             }
 
             if (ReferenceEquals(x, Null.Instance) && ReferenceEquals(y, Undefined.Instance))
@@ -469,8 +504,8 @@ namespace Jint.Runtime
 
             if (typea == Types.Number)
             {
-                var nx = x.AsNumber();
-                var ny = y.AsNumber();
+                var nx = TypeConverter.ToNumber(x);
+                var ny = TypeConverter.ToNumber(y);
 
                 if (double.IsNaN(nx) || double.IsNaN(ny))
                 {
@@ -484,16 +519,17 @@ namespace Jint.Runtime
 
                 return false;
             }
-
             if (typea == Types.String)
             {
-                return x.AsString() == y.AsString();
+                return TypeConverter.ToString(x) == TypeConverter.ToString(y);
             }
-
             if (typea == Types.Boolean)
             {
-                return x.AsBoolean() == y.AsBoolean();
+                return TypeConverter.ToBoolean(x) == TypeConverter.ToBoolean(y);
             }
+            if (typea == Types.Object)
+            {
+                var xw = x.AsObject() as IObjectWrapper;
 
 			if (typea == Types.Object)
 			{
@@ -783,7 +819,7 @@ namespace Jint.Runtime
                 propertyNameString = TypeConverter.ToString(propertyNameValue);
             }
 
-            TypeConverter.CheckObjectCoercible(_engine, baseValue, memberExpression, baseReference);
+            TypeConverter.CheckObjectCoercible(_engine, baseValue);
 
             if (baseReference is Reference r)
             {
@@ -870,12 +906,11 @@ namespace Jint.Runtime
 
             if (ReferenceEquals(func, Undefined.Instance))
             {
-                throw new JavaScriptException(_engine.TypeError, r == null ? "" : string.Format("Object has no method '{0}'", r.GetReferencedName()));
+                throw new JavaScriptException(_engine.TypeError, r == null ? "" : string.Format("Object has no method '{0}'", (callee as Reference).GetReferencedName()));
             }
 
             if (!func.IsObject())
             {
-
                 if (_engine.Options._ReferenceResolver == null ||
                     !_engine.Options._ReferenceResolver.TryGetCallable(_engine, callee, out func))
                 {
@@ -1043,7 +1078,7 @@ namespace Jint.Runtime
 
                 case UnaryOperator.Minus:
                     var n = TypeConverter.ToNumber(_engine.GetValue(value, true));
-                    return double.IsNaN(n) ? double.NaN : n*-1;
+                    return double.IsNaN(n) ? double.NaN : n * -1;
 
                 case UnaryOperator.BitwiseNot:
                     return ~TypeConverter.ToInt32(_engine.GetValue(value, true));
