@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Esprima;
 using Esprima.Ast;
-using Esprima;
-using Esprima.Ast;
 using Jint.Native;
 using Jint.Native.Function;
 using Jint.Native.Number;
@@ -526,11 +524,7 @@ namespace Jint.Runtime
             if (typea == Types.Boolean)
             {
                 return TypeConverter.ToBoolean(x) == TypeConverter.ToBoolean(y);
-            }
-            if (typea == Types.Object)
-            {
-                var xw = x.AsObject() as IObjectWrapper;
-
+            }            
 			if (typea == Types.Object)
 			{
 			    if (x.AsObject() is IObjectWrapper xw)
