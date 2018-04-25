@@ -56,8 +56,8 @@ namespace Jint.Runtime
             if (assignmentExpression.Operator == AssignmentOperator.Assign) // "="
             {
 
-                if(lref.IsStrict() 
-                   && !ReferenceEquals(lref.GetBase().TryCast<EnvironmentRecord>(), null) 
+                if(lref.IsStrict()
+                   && lref.GetBase() is EnvironmentRecord
                    && (lref.GetReferencedName() == "eval" || lref.GetReferencedName() == "arguments"))
                 {
                     throw new JavaScriptException(_engine.SyntaxError);
@@ -983,7 +983,7 @@ namespace Jint.Runtime
                     r = value as Reference;
                     if (r != null
                         && r.IsStrict()
-                        && (!ReferenceEquals(r.GetBase().TryCast<EnvironmentRecord>(), null))
+                        && r.GetBase() is EnvironmentRecord
                         && ("eval" == r.GetReferencedName() || "arguments" == r.GetReferencedName()))
                     {
                         throw new JavaScriptException(_engine.SyntaxError);
@@ -1000,7 +1000,7 @@ namespace Jint.Runtime
                     r = value as Reference;
                     if (r != null
                         && r.IsStrict()
-                        && (!ReferenceEquals(r.GetBase().TryCast<EnvironmentRecord>(), null))
+                        && r.GetBase() is EnvironmentRecord
                         && ("eval" == r.GetReferencedName() || "arguments" == r.GetReferencedName()))
                     {
                         throw new JavaScriptException(_engine.SyntaxError);
