@@ -1243,7 +1243,7 @@ namespace Jint.Tests.Runtime
             engine.Execute(
                 string.Format("var d = new Date({0},{1},{2},{3},{4},{5},{6});", testDateTimeOffset.Year, testDateTimeOffset.Month - 1, testDateTimeOffset.Day, testDateTimeOffset.Hour, testDateTimeOffset.Minute, testDateTimeOffset.Second, testDateTimeOffset.Millisecond));
 
-            var expected = testDateTimeOffset.ToString("ddd MMM dd yyyy HH:mm:ss 'GMT'zzz");
+            var expected = testDateTimeOffset.ToString("ddd MMM dd yyyy HH:mm:ss 'GMT'zzz", CultureInfo.InvariantCulture);
             var actual = engine.Execute("d.toString();").GetCompletionValue().ToString();
 
             Assert.Equal(expected, actual);
